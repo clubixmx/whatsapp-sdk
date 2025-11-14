@@ -1,0 +1,68 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.TemporaryItems
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Gradle
+.gradle/
+build/
+# Keep Gradle Wrapper
+!gradle/wwrapper/gradle-wrapper.jar
+# If you also use other build dirs
+bin/
+target/
+classes/
+
+# Java artifacts and logs
+*.class
+*.log
+*.ctxt
+*.tmp
+*.swp
+*.swo
+
+# Archives (build outputs)
+*.jar
+*.war
+*.ear
+*.nar
+*.zip
+*.tar.gz
+*.tar
+*.7z
+# Keep Gradle wrapper jar even with *.jar ignored
+!gradle/wrapper/gradle-wrapper.jar
+
+# Spring Boot
+logs/
+tmp/
+.spring-boot-devtools
+
+# Env / local config
+.env
+.env.*
+application-local.properties
+application-local.yml
+
+# JVM crash logs / heap dumps
+hs_err_pid*
+replay_pid*
+*.hprof
+
+# Coverage
+jacoco.exec
+*.ec
+*.em

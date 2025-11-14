@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: whatsapp-api
+
+server:
+  port: 8080

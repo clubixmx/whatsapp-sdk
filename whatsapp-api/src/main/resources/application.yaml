@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: whatsapp-api
+
+server:
+  port: 8080
+
+whatsapp:
+  hook:
+    verify-token: cashback
