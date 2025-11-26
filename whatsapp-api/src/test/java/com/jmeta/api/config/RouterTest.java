@@ -1,7 +1,7 @@
 package com.jmeta.api.config;
 
 
-import com.jmeta.api.handler.WhatsappHandler;
+import com.jmeta.api.handler.HealthCheckHandler;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -18,8 +18,8 @@ public class RouterTest {
     @BeforeEach
     void setUp() {
         // Arrange: wire the router to the handler
-        WhatsappHandler handler = new WhatsappHandler("cashback");
-        RouterFunction<ServerResponse> routes = route(GET("/health"), handler::healthCheck);
+        HealthCheckHandler handler = new HealthCheckHandler("cashback");
+        RouterFunction<ServerResponse> routes = route(GET("/hook"), handler::healthCheck);
 
         // Bind a client directly to the RouterFunction (no full Spring context)
         client = WebTestClient.bindToRouterFunction(routes).build();
@@ -28,7 +28,7 @@ public class RouterTest {
     @Test
     void health_success() {
         client.get()
-                .uri("/health?hub.mode=subscribe&hub.verify_token=cashback&hub.challenge=12345")
+                .uri("/hook?hub.mode=subscribe&hub.verify_token=cashback&hub.challenge=12345")
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentTypeCompatibleWith(MediaType.TEXT_PLAIN)
@@ -38,7 +38,7 @@ public class RouterTest {
     @Test
     void health_forbidden_wrong_token() {
         client.get()
-                .uri("/health?hub.mode=subscribe&hub.verify_token=wrong&hub.challenge=abc")
+                .uri("/hook?hub.mode=subscribe&hub.verify_token=wrong&hub.challenge=abc")
                 .exchange()
                 .expectStatus().isForbidden()
                 .expectBody(String.class).isEqualTo("Forbidden");
@@ -47,7 +47,7 @@ public class RouterTest {
     @Test
     void health_forbidden_missing_token() {
         client.get()
-                .uri("/health?hub.mode=subscribe&hub.challenge=abc")
+                .uri("/hook?hub.mode=subscribe&hub.challenge=abc")
                 .exchange()
                 .expectStatus().isForbidden()
                 .expectBody(String.class).isEqualTo("Forbidden");
@@ -56,7 +56,7 @@ public class RouterTest {
     @Test
     void health_forbidden_missing_mode() {
         client.get()
-                .uri("/health?hub.verify_token=cashback&hub.challenge=abc")
+                .uri("/hook?hub.verify_token=cashback&hub.challenge=abc")
                 .exchange()
                 .expectStatus().isForbidden()
                 .expectBody(String.class).isEqualTo("Forbidden");
@@ -65,7 +65,7 @@ public class RouterTest {
     @Test
     void health_forbidden_wrong_mode() {
         client.get()
-                .uri("/health?hub.mode=unsubscribe&hub.verify_token=cashback&hub.challenge=abc")
+                .uri("/hook?hub.mode=unsubscribe&hub.verify_token=cashback&hub.challenge=abc")
                 .exchange()
                 .expectStatus().isForbidden()
                 .expectBody(String.class).isEqualTo("Forbidden");

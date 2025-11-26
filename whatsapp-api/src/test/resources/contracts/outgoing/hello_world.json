@@ -1,0 +1,10 @@
+{
+  "messaging_product": "whatsapp",
+  "recipient_type": "individual",
+  "to": "525511566012",
+  "type": "text",
+  "text": {
+    "preview_url": false,
+    "body": "Hello World"
+  }
+}

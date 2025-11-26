@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
-public class WhatsappHandler {
+public class HealthCheckHandler {
 
     private final String veryfyToken;
 

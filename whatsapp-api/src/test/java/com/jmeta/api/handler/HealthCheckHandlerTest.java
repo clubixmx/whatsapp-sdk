@@ -9,10 +9,10 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
-public class WhatsappHandlerTest {
+public class HealthCheckHandlerTest {
 
     private WebTestClient newClient() {
-        WhatsappHandler handler = new WhatsappHandler("cashback");
+        HealthCheckHandler handler = new HealthCheckHandler("cashback");
         RouterFunction<ServerResponse> rf = route(GET("/health"), handler::healthCheck);
         return WebTestClient.bindToRouterFunction(rf).build();
     }
