@@ -15,8 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WhatsappMessageSenderTest {
 
-    private final WhatsappMessageSender messageSender = new WhatsappMessageSender(
-            "https://graph.facebook.com/v16.0/YOUR_PHONE_NUMBER_ID/messages","YOUR_ACCESS_TOKEN");
 
     private final ObjectMapper mapper = new ObjectMapper()
             .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
@@ -42,8 +40,8 @@ public class WhatsappMessageSenderTest {
                     .text(TextContent.builder().body("Hello, this is a test message.").build())
                     .build();
 
-            // perform the send
-            MessageResponse response = sender.send(message);
+            // perform the send and block for the reactive result
+            MessageResponse response = sender.send(message).block();
 
             // ensure the mocked server got a request and the client saw 200
             assertEquals(200, response.statusCode());

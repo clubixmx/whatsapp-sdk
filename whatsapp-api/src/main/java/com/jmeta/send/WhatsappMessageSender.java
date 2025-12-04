@@ -1,49 +1,48 @@
 package com.jmeta.send;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import lombok.RequiredArgsConstructor;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
-@RequiredArgsConstructor
 public class WhatsappMessageSender implements MessageSender{
     private final String metaUrl;
     private final String token;
 
     private final ObjectMapper mapper = new ObjectMapper()
-            .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE) // `snake_case` for WhatsApp API
+            .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
             .setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private final WebClient webClient;
 
-    @Override
-    public MessageResponse send(WhatsappMessage whatsappMessage) {
-        try {
-            String json = mapper.writeValueAsString(Objects.requireNonNull(whatsappMessage, "whatsappMessage"));
+    public WhatsappMessageSender(String metaUrl, String token) {
+        this.metaUrl = metaUrl;
+        this.token = token;
+        this.webClient = WebClient.builder()
+                .baseUrl(metaUrl)
+                .defaultHeader("Authorization", "Bearer " + token)
+                .defaultHeader("Content-Type", "application/json")
+                .defaultHeader("Accept", "application/json")
+                .build();
+    }
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(metaUrl))
-                    .header("Authorization", "Bearer " + token)
-                    .header("Content-Type", "application/json")
-                    .header("Accept", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            return new MessageResponse(response.statusCode(), response.body());
-        } catch (InterruptedException ie) {
-            Thread.currentThread().interrupt();
-            return new MessageResponse(499, "Request interrupted");
-        } catch (IOException ioe) {
-            return new MessageResponse(500, ioe.getMessage());
-        }
+    // Reactive send: returns Mono\<MessageResponse\>
+    public Mono<MessageResponse> send (WhatsappMessage whatsappMessage) {
+        return Mono.defer(() -> {
+            try {
+                String json = mapper.writeValueAsString(whatsappMessage);
+                return webClient.post()
+                        .bodyValue(json)
+                        .exchangeToMono(resp ->
+                                resp.bodyToMono(String.class).defaultIfEmpty("")
+                                        .map(body -> new MessageResponse(resp.statusCode().value(), body))
+                        );
+            } catch (JsonProcessingException e) {
+                return Mono.error(e);
+            }
+        });
     }
 }

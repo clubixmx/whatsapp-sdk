@@ -1,5 +1,7 @@
 package com.jmeta.send;
 
+import reactor.core.publisher.Mono;
+
 public interface MessageSender {
-    MessageResponse send(WhatsappMessage whatsappMessage);
+    Mono<MessageResponse> send(WhatsappMessage whatsappMessage);
 }
