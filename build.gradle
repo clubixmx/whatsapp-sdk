@@ -1,0 +1,103 @@
+// groovy
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'org.springframework.boot' version '3.5.5'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.jmeta'
+version = '0.1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories { mavenCentral() }
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.boot:spring-boot-dependencies:3.5.5'
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation "com.squareup.okhttp3:mockwebserver:4.11.0"
+    testImplementation "com.fasterxml.jackson.core:jackson-databind:2.15.2"
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+
+    testImplementation platform('org.junit:junit-bom:5.10.2')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly  'org.junit.platform:junit-platform-launcher'
+}
+
+test { useJUnitPlatform() }
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = project.group
+            artifactId = 'whatsapp-sdk'
+            version = project.version
+
+            pom {
+                name = 'whatsapp-sdk'
+                description = 'WhatsApp SDK'
+                url = 'https://github.com/clubixmx/whatsapp-sdk'
+
+                // Add BOM import only when a dependencyManagement node is not already present
+                withXml {
+                    def root = asNode()
+                    if (!root.'dependencyManagement' || root.'dependencyManagement'.size() == 0) {
+                        def depMgmt = root.appendNode('dependencyManagement')
+                        def deps = depMgmt.appendNode('dependencies')
+                        def dep = deps.appendNode('dependency')
+                        dep.appendNode('groupId', 'org.springframework.boot')
+                        dep.appendNode('artifactId', 'spring-boot-dependencies')
+                        dep.appendNode('version', '3.5.5')
+                        dep.appendNode('type', 'pom')
+                        dep.appendNode('scope', 'import')
+                    }
+                }
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'jonakmex'
+                        name = 'jonakmex'
+                    }
+                }
+            }
+        }
+    }
+    repositories { mavenLocal() }
+}
+
+tasks.named('bootJar') {
+    enabled = false
+}
+
+tasks.named('jar') {
+    enabled = true
+}
+
+tasks.named("generateMetadataFileForMavenJavaPublication") { task ->
+    if (task.hasProperty('suppressedValidationErrors')) {
+        task.suppressedValidationErrors.add("dependencies-without-versions")
+    }
+}
