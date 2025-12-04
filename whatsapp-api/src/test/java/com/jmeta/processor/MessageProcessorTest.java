@@ -29,4 +29,15 @@ public class MessageProcessorTest {
             assertNotNull(incoming.type(), "incoming message type should not be null");
         }
     }
+
+    @Test
+    void should_ignore_status_message() throws Exception {
+        try (InputStream is = getClass().getResourceAsStream("/contracts/incoming/sample_read_message.json")) {
+            assertNotNull(is, "resource not found");
+            String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+
+            Optional<IncomingMessage> optional = IncomingMessageMapper.map(json);
+            assertTrue(optional.isEmpty(), "expected mapper to ignore status/read callbacks");
+        }
+    }
 }
