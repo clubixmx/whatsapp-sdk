@@ -4,7 +4,7 @@
   "to": "525511566012",
   "type": "text",
   "text": {
-    "preview_url": false,
-    "body": "Hello World"
+    "preview_url":false,
+    "body": "Hello, this is a test message."
   }
 }

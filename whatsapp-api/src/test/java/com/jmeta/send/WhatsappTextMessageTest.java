@@ -32,8 +32,8 @@ public class WhatsappTextMessageTest {
         JsonNode actual = MAPPER.valueToTree(whatsappMessage);
 
         try (InputStream is = getClass().getClassLoader()
-                .getResourceAsStream("contracts/outgoing/hello_world.json")) {
-            assertNotNull(is, "Contract file not found at `src/test/resources/contracts/outgoing/hello_world.json`");
+                .getResourceAsStream("contracts/outgoing/sample_text_message.json")) {
+            assertNotNull(is, "Contract file not found at `src/test/resources/contracts/outgoing/sample_text_message.json`");
             JsonNode expected = MAPPER.readTree(is);
             assertEquals(expected, actual, "Produced payload must match the contract JSON");
         }
