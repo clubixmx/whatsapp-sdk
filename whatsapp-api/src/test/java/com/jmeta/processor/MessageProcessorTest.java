@@ -7,8 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MessageProcessorTest {
     private MessageProcessor messageProcessor;
@@ -18,8 +20,13 @@ public class MessageProcessorTest {
         try (InputStream is = getClass().getResourceAsStream("/contracts/incoming/hello_world.json")) {
             assertNotNull(is, "resource not found");
             String json = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-            IncomingMessage incoming = IncomingMessageMapper.map(json);
 
+            Optional<IncomingMessage> optional = IncomingMessageMapper.map(json);
+            assertTrue(optional.isPresent(), "expected an incoming message");
+            IncomingMessage incoming = optional.get();
+
+            assertNotNull(incoming, "incoming message should not be null");
+            assertNotNull(incoming.type(), "incoming message type should not be null");
         }
     }
 }

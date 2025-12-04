@@ -3,6 +3,9 @@ package com.jmeta.api.config;
 import com.jmeta.api.handler.HealthCheckHandler;
 import com.jmeta.api.handler.IncomingMessageHandler;
 import com.jmeta.api.processor.MessageProcessor;
+import com.jmeta.api.processor.TextMessageProcessor;
+import com.jmeta.send.MessageSender;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +16,10 @@ import java.util.Map;
 @Slf4j
 @Configuration
 @EnableConfigurationProperties(WhatsappHookProperties.class)
+@RequiredArgsConstructor
 public class HandlerConfig {
+
+    private final MessageSender messageSender;
 
     @Bean
     public HealthCheckHandler healthCheckHandler(WhatsappHookProperties properties) {
@@ -28,7 +34,7 @@ public class HandlerConfig {
     @Bean
     public Map<String,MessageProcessor> messageProcessorMap() {
         return Map.of(
-                "text", new com.jmeta.api.processor.TextMessageProcessor()
+                "text", new com.jmeta.api.processor.TextMessageProcessor(messageSender)
         );
     }
 }

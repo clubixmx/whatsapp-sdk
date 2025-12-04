@@ -22,19 +22,21 @@ public class IncomingMessageHandler {
         return serverRequest
                 .bodyToMono(String.class)
                 .flatMap(body -> Mono.fromCallable(() -> IncomingMessageMapper.map(body)))
-                .doOnNext(incomingMessage -> {
-                    // fire-and-forget processing on a boundedElastic scheduler
-                    Mono.fromRunnable(() -> {
-                                String type = incomingMessage.type();
-                                MessageProcessor processor = messageProcessorMap.get(type);
-                                if (processor == null) {
-                                    log.warn("No MessageProcessor found for type '{}'", type);
-                                    return;
-                                }
-                                processor.process(incomingMessage);
-                            })
-                            .subscribeOn(reactor.core.scheduler.Schedulers.boundedElastic())
-                            .subscribe();
+                .doOnNext(optionalIncoming -> {
+                    optionalIncoming.ifPresent(incomingMessage ->
+                            // fire-and-forget processing on a boundedElastic scheduler
+                            Mono.fromRunnable(() -> {
+                                        String type = incomingMessage.type();
+                                        MessageProcessor processor = messageProcessorMap.get(type);
+                                        if (processor == null) {
+                                            log.warn("No MessageProcessor found for type '{}'", type);
+                                            return;
+                                        }
+                                        processor.process(incomingMessage);
+                                    })
+                                    .subscribeOn(reactor.core.scheduler.Schedulers.boundedElastic())
+                                    .subscribe()
+                    );
                 })
                 // immediately acknowledge after mapping succeeds
                 .flatMap(msg -> ServerResponse.ok().build())

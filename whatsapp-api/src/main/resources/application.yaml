@@ -8,3 +8,7 @@ server:
 whatsapp:
   hook:
     verify-token: cashback
+  outgoing:
+    phoneId: "886634904532563"
+    metaUrl: "https://graph.facebook.com/v17.0/${whatsapp.outgoing.phoneId}/messages"
+    token: "EAAfTjwe2ZC4gBQMvYwZAik4e3hUP8FGZCuoUxJo7IHu7VVJfRrScDCeNUwJJn0o8qU4zz5v8zmPpNBkBq59xPr7UZC5d7EP4qRNPcXKMCK6QZCNdE1CZB8FdeSnobPqZBCeDfJtoXVAOd1iZAZCfuDRSOnpQXbfgOvvRO8h0FAhbuBrR2UKnZCXsQPcB63kfCmAlBZCQhSYBD7RN1jWAmujjCAUZCqUbKjtfT8ThO7XILZC7QWzOU7BUk5ZBZBg7biDXfMZCX7ZAO4zxUtuTjzvCuAuX8gl9s0qj2dVaAy0Dr"

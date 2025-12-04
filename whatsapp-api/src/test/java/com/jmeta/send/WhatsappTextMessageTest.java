@@ -24,7 +24,7 @@ public class WhatsappTextMessageTest {
             .type("text")
             .text(
                 TextContent.builder()
-                    .body("Hello World")
+                    .body("Hello, this is a test message.")
                     .build()
             )
             .build();

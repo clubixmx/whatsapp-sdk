@@ -13,6 +13,3 @@ public record WhatsappMessage(String messagingProduct, String recipientType, Str
         }
     }
 }
-
-@Builder
-record TextContent (boolean preview_url, String body) {}

@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import org.springframework.web.reactive.function.client.ClientResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-
+@Slf4j
 public class WhatsappMessageSender implements MessageSender{
     private final String metaUrl;
     private final String token;
@@ -32,6 +32,7 @@ public class WhatsappMessageSender implements MessageSender{
     // Reactive send: returns Mono\<MessageResponse\>
     public Mono<MessageResponse> send (WhatsappMessage whatsappMessage) {
         return Mono.defer(() -> {
+            log.info("Sending WhatsappMessage:{}",whatsappMessage.toString());
             try {
                 String json = mapper.writeValueAsString(whatsappMessage);
                 return webClient.post()

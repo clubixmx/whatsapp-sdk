@@ -25,9 +25,15 @@ public class IncomingMessageHandlerTest {
 
     @BeforeEach
     void setUp() {
+
         // SUT to be implemented: IncomingMessageHandler#receive(ServerRequest)
         IncomingMessageHandler handler = new IncomingMessageHandler(Map.of(
-                "text", new com.jmeta.api.processor.TextMessageProcessor()
+                "text", new com.jmeta.api.processor.MessageProcessor(){
+                    @Override
+                    public void process(com.jmeta.api.processor.message.IncomingMessage incomingMessage) {
+                        log.info("Mock processor received message: {}", ((com.jmeta.api.processor.message.IncomingTextMessage)incomingMessage).text());
+                    }
+                }
         ));
 
         RouterFunction<ServerResponse> routes =
