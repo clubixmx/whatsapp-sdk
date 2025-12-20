@@ -2,6 +2,7 @@ package com.jmeta.incoming.mapper;
 
 
 import com.jmeta.incoming.message.IncomingMessage;
+import com.jmeta.incoming.message.Message;
 import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
@@ -22,9 +23,12 @@ public class IncomingMessageMapperTest {
             Optional<IncomingMessage> optional = IncomingMessageMapper.map(json);
             assertTrue(optional.isPresent(), "expected an incoming message");
             IncomingMessage incoming = optional.get();
+            Message message = incoming.message();
+            assertNotNull(message, "message should not be null");
 
             assertNotNull(incoming, "incoming message should not be null");
             assertNotNull(incoming.type(), "incoming message type should not be null");
+
         }
     }
 }

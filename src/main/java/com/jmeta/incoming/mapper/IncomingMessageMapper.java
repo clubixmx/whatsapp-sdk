@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jmeta.incoming.message.IncomingMessage;
 import com.jmeta.incoming.message.IncomingTextMessage;
+import com.jmeta.incoming.message.Message;
 import com.jmeta.incoming.message.Profile;
 
 import java.util.Optional;
@@ -49,6 +50,9 @@ public class IncomingMessageMapper {
     private static IncomingTextMessage mapTextMessage(JsonNode messageNode, Profile profile) {
         String type = messageNode.path("type").asText();
         String text = messageNode.path("text").path("body").asText();
-        return new IncomingTextMessage(profile, type, text);
+        String from = messageNode.path("from").asText();
+        String id = messageNode.path("id").asText();
+        Message message = new Message(from, id);
+        return new IncomingTextMessage(profile,message, type, text);
     }
 }
