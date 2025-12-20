@@ -29,7 +29,7 @@ public class WhatsappMarkAsReadSender implements MarkAsReadSender {
     }
 
     @Override
-    public Mono<Void> markAsRead(String waId, String messageId) {
+    public Mono<Void> markAsRead(String messageId) {
         return Mono.defer(() -> {
             log.info("Marking as read:{}",messageId);
             MarkAsReadRequest request = MarkAsReadRequest.builder()

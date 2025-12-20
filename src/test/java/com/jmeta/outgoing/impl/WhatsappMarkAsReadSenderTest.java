@@ -32,10 +32,9 @@ public class WhatsappMarkAsReadSenderTest {
             WhatsappMarkAsReadSender sender = new WhatsappMarkAsReadSender(baseUrl, "TEST_TOKEN");
 
             String messageId = "wamid.234123";
-            String waId = "5511566012";
 
             // perform the mark-as-read and block
-            sender.markAsRead(waId, messageId).block();
+            sender.markAsRead(messageId).block();
 
             // capture the actual request body
             okhttp3.mockwebserver.RecordedRequest recorded = server.takeRequest();
