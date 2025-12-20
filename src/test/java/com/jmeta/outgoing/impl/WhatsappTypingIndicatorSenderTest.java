@@ -13,14 +13,14 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WhatsappMarkAsReadSenderTest {
+public class WhatsappTypingIndicatorSenderTest {
 
     private final ObjectMapper mapper = new ObjectMapper()
             .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
 
     @Test
-    void should_produce_json_for_mark_message_as_read() throws Exception {
+    void should_produce_json_for_typing_indicator() throws Exception {
         try (MockWebServer server = new MockWebServer()) {
             server.start();
 
@@ -29,20 +29,19 @@ public class WhatsappMarkAsReadSenderTest {
 
             // point the sender to the mock server
             String baseUrl = server.url("/messages").toString();
-            WhatsappMarkAsReadSender sender = new WhatsappMarkAsReadSender(baseUrl, "TEST_TOKEN");
+            WhatsappTypingIndicatorSender typingIndicatorSender = new WhatsappTypingIndicatorSender(baseUrl, "TEST_TOKEN");
 
-            String messageId = "wamid.234123";
-            String waId = "5511566012";
+            String messageId = "wamid.HBgLMTY1MDM4Nzk0MzkVAgASGBQzQUYzMjEzNDM2RTZGQ0MzMDJBRgA=";
 
             // perform the mark-as-read and block
-            sender.markAsRead(waId, messageId).block();
+            typingIndicatorSender.send(messageId).block();
 
             // capture the actual request body
             okhttp3.mockwebserver.RecordedRequest recorded = server.takeRequest();
             String actualJson = recorded.getBody().readString(StandardCharsets.UTF_8);
 
             // load expected contract from resources
-            try (InputStream is = getClass().getResourceAsStream("/contracts/outgoing/mark_as_read.json")) {
+            try (InputStream is = getClass().getResourceAsStream("/contracts/outgoing/send_typing_indicator.json")) {
                 assertTrue(is != null, "Contract file not found in resources");
                 String expectedJson = new String(is.readAllBytes(), StandardCharsets.UTF_8);
 

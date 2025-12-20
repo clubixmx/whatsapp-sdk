@@ -5,13 +5,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.jmeta.outgoing.MarkAsReadSender;
+import com.jmeta.outgoing.TypingIndicatorSender;
 import com.jmeta.outgoing.message.MarkAsReadRequest;
+import com.jmeta.outgoing.message.TypingIndicatorRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Slf4j
-public class WhatsappMarkAsReadSenderSender implements MarkAsReadSender {
+public class WhatsappTypingIndicatorSender implements TypingIndicatorSender {
 
     private final ObjectMapper mapper = new ObjectMapper()
             .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
@@ -19,7 +21,7 @@ public class WhatsappMarkAsReadSenderSender implements MarkAsReadSender {
 
     private final WebClient webClient;
 
-    public WhatsappMarkAsReadSenderSender(String metaUrl, String token) {
+    public WhatsappTypingIndicatorSender(String metaUrl, String token) {
         this.webClient = WebClient.builder()
                 .baseUrl(metaUrl)
                 .defaultHeader("Authorization", "Bearer " + token)
@@ -29,10 +31,10 @@ public class WhatsappMarkAsReadSenderSender implements MarkAsReadSender {
     }
 
     @Override
-    public Mono<Void> markAsRead(String waId, String messageId) {
+    public Mono<Void> send(String messageId) {
         return Mono.defer(() -> {
             log.info("Marking as read:{}",messageId);
-            MarkAsReadRequest request = MarkAsReadRequest.builder()
+            TypingIndicatorRequest request = TypingIndicatorRequest.builder()
                     .messageId(messageId)
                     .build();
             try {
