@@ -1,8 +1,8 @@
 package com.jmeta.outgoing.config;
 
 
-import com.jmeta.outgoing.sender.MessageSender;
-import com.jmeta.outgoing.sender.WhatsappMessageSender;
+import com.jmeta.outgoing.MessageSender;
+import com.jmeta.outgoing.impl.WhatsappMessageSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;

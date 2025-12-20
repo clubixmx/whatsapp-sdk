@@ -3,7 +3,7 @@ package com.jmeta.incoming.processor;
 
 import com.jmeta.incoming.message.IncomingMessage;
 import com.jmeta.incoming.message.IncomingTextMessage;
-import com.jmeta.outgoing.sender.MessageSender;
+import com.jmeta.outgoing.MessageSender;
 import com.jmeta.outgoing.message.TextContent;
 import com.jmeta.outgoing.message.WhatsappMessage;
 import lombok.RequiredArgsConstructor;

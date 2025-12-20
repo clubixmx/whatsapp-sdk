@@ -4,7 +4,6 @@ import com.jmeta.api.handler.HealthCheckHandler;
 import com.jmeta.api.handler.IncomingMessageHandler;
 import com.jmeta.incoming.config.WhatsappHookProperties;
 import com.jmeta.incoming.processor.MessageProcessor;
-import com.jmeta.outgoing.sender.MessageSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

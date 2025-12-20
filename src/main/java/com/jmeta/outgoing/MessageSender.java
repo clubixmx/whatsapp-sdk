@@ -1,4 +1,4 @@
-package com.jmeta.outgoing.sender;
+package com.jmeta.outgoing;
 
 import com.jmeta.outgoing.message.MessageResponse;
 import com.jmeta.outgoing.message.WhatsappMessage;
