@@ -1,7 +1,9 @@
 package com.jmeta.outgoing.config;
 
 
+import com.jmeta.outgoing.MarkAsReadSender;
 import com.jmeta.outgoing.MessageSender;
+import com.jmeta.outgoing.impl.WhatsappMarkAsReadSenderSender;
 import com.jmeta.outgoing.impl.WhatsappMessageSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,5 +20,10 @@ public class MessageSenderConfig {
     @Bean
     public MessageSender messageSender() {
         return new WhatsappMessageSender(whatsappProperties.getMetaUrl(),whatsappProperties.getToken());
+    }
+
+    @Bean
+    public MarkAsReadSender markAsRead() {
+        return new WhatsappMarkAsReadSenderSender(whatsappProperties.getMetaUrl(),whatsappProperties.getToken());
     }
 }

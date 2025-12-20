@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.jmeta.outgoing.MarkAsRead;
+import com.jmeta.outgoing.MarkAsReadSender;
 import com.jmeta.outgoing.message.MarkAsReadRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Slf4j
-public class WhatsappMarkAsReadSender implements MarkAsRead {
+public class WhatsappMarkAsReadSenderSender implements MarkAsReadSender {
 
     private final ObjectMapper mapper = new ObjectMapper()
             .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
@@ -19,7 +19,7 @@ public class WhatsappMarkAsReadSender implements MarkAsRead {
 
     private final WebClient webClient;
 
-    public WhatsappMarkAsReadSender(String metaUrl, String token) {
+    public WhatsappMarkAsReadSenderSender(String metaUrl, String token) {
         this.webClient = WebClient.builder()
                 .baseUrl(metaUrl)
                 .defaultHeader("Authorization", "Bearer " + token)

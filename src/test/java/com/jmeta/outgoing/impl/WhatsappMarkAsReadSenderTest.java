@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WhatsappMarkAsReadTest {
+public class WhatsappMarkAsReadSenderTest {
 
     private final ObjectMapper mapper = new ObjectMapper()
             .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
@@ -29,7 +29,7 @@ public class WhatsappMarkAsReadTest {
 
             // point the sender to the mock server
             String baseUrl = server.url("/messages").toString();
-            WhatsappMarkAsReadSender sender = new WhatsappMarkAsReadSender(baseUrl, "TEST_TOKEN");
+            WhatsappMarkAsReadSenderSender sender = new WhatsappMarkAsReadSenderSender(baseUrl, "TEST_TOKEN");
 
             String messageId = "wamid.234123";
             String waId = "5511566012";
