@@ -42,6 +42,10 @@ dependencies {
 
 test { useJUnitPlatform() }
 
+def codeArtifactUrl = (findProperty("codeartifactUrl") ?: System.getenv("CODEARTIFACT_REPO_URL"))?.toString()
+def codeArtifactToken = (findProperty("codeartifactToken") ?: System.getenv("CODEARTIFACT_AUTH_TOKEN"))?.toString()
+
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -49,11 +53,13 @@ publishing {
         }
     }
     repositories {
-        maven {
-            url = uri(System.getenv("CODEARTIFACT_REPO_URL"))
-            credentials {
-                username "aws"
-                password System.env.CODEARTIFACT_AUTH_TOKEN
+        if (codeArtifactUrl && codeArtifactToken) {
+            maven {
+                url = uri(codeArtifactUrl)
+                credentials {
+                    username = "aws"
+                    password = codeArtifactToken
+                }
             }
         }
     }
