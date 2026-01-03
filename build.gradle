@@ -50,7 +50,7 @@ publishing {
     }
     repositories {
         maven {
-            url 'https://clubix-835952944502.d.codeartifact.us-east-1.amazonaws.com/maven/koden/'
+            url = uri(System.getenv("CODEARTIFACT_REPO_URL"))
             credentials {
                 username "aws"
                 password System.env.CODEARTIFACT_AUTH_TOKEN
