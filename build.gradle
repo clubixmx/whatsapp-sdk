@@ -46,46 +46,17 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            groupId = project.group
-            artifactId = 'whatsapp-sdk'
-            version = project.version
-
-            pom {
-                name = 'whatsapp-sdk'
-                description = 'WhatsApp SDK'
-                url = 'https://github.com/clubixmx/whatsapp-sdk'
-
-                // Add BOM import only when a dependencyManagement node is not already present
-                withXml {
-                    def root = asNode()
-                    if (!root.'dependencyManagement' || root.'dependencyManagement'.size() == 0) {
-                        def depMgmt = root.appendNode('dependencyManagement')
-                        def deps = depMgmt.appendNode('dependencies')
-                        def dep = deps.appendNode('dependency')
-                        dep.appendNode('groupId', 'org.springframework.boot')
-                        dep.appendNode('artifactId', 'spring-boot-dependencies')
-                        dep.appendNode('version', '3.5.5')
-                        dep.appendNode('type', 'pom')
-                        dep.appendNode('scope', 'import')
-                    }
-                }
-
-                licenses {
-                    license {
-                        name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'jonakmex'
-                        name = 'jonakmex'
-                    }
-                }
+        }
+    }
+    repositories {
+        maven {
+            url 'https://clubix-835952944502.d.codeartifact.us-east-1.amazonaws.com/maven/koden/'
+            credentials {
+                username "aws"
+                password System.env.CODEARTIFACT_AUTH_TOKEN
             }
         }
     }
-    repositories { mavenLocal() }
 }
 
 tasks.named('bootJar') {
